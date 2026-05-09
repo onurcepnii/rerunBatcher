@@ -119,33 +119,6 @@ Same field registration methods as `AutoLogger`, plus:
 | `setCapacity(n)` | Resize at runtime; flushes if current size ≥ n. |
 | `getCapacity()` | Returns current capacity. |
 
-### Custom component types
-
-Subclass `FieldHandlerBase<MsgT>` to support any Rerun component not covered by the three built-in handlers:
-
-```cpp
-template <typename MsgT>
-struct QuaternionHandler : public rerunBatcher::FieldHandlerBase<MsgT> {
-    using Fn = std::function<rerun::components::RotationQuat(const MsgT&)>;
-
-    QuaternionHandler(std::string name, Fn fn, int cap)
-        : rerunBatcher::FieldHandlerBase<MsgT>(std::move(name)), extractor(std::move(fn))
-    { data.reserve(cap); }
-
-    void addData(const MsgT& msg) override { data.emplace_back(extractor(msg)); }
-    void clear()                  override { data.clear(); }
-    size_t size()           const override { return data.size(); }
-    void sendColumn(rerun::RecordingStream& rec, const rerun::TimeColumn& tc) override {
-        rec.send_columns(this->name, {tc}, rerun::Transform3D(data).columns());
-    }
-
-private:
-    Fn extractor;
-    std::vector<rerun::components::RotationQuat> data;
-};
-
-engine.registerCustom(std::make_unique<QuaternionHandler<ImuMsg>>(...));
-```
 
 ---
 
