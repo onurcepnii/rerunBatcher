@@ -2,11 +2,12 @@
 
 Header-only, buffered telemetry logger for ROS 2 nodes. Solves the throughput bottleneck of the standard [Rerun](https://rerun.io) `log()` API at high message frequencies (500 Hz+) by batching messages and dispatching them in a single `send_columns` call.
 
+<img width="800" height="434" alt="rerunBatcher" src="https://github.com/user-attachments/assets/f9c83fb3-003c-4e38-a62f-3a14e9c1770b" />
 ---
 
 ## Requirements
 
-- ROS 2 Humble / Iron / Jazzy
+- ROS 2
 - Rerun C++ SDK 0.29.1+
 - C++17
 
